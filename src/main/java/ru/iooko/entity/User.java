@@ -24,7 +24,6 @@ public class User {
 
     private String lastname;
 
-    @Convert(converter = BirthdayConverter.class)
     @Column(name = "birth_date")
     private Birthday birthdate;
 

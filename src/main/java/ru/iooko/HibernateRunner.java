@@ -1,46 +1,39 @@
 package ru.iooko;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import ru.iooko.entity.Birthday;
-import ru.iooko.entity.Role;
 import ru.iooko.entity.User;
-
-import java.time.LocalDate;
+import ru.iooko.util.HibernateUtil;
 
 public class HibernateRunner {
 
     public static void main(String[] args) {
-        Configuration configuration = new Configuration()
-                .registerTypeOverride(new JsonBinaryType())
-                .configure()
-                .addAnnotatedClass(User.class);
+        // Transient state
+        User user = User.builder()
+                .username("ivan@gmail.com")
+                .firstname("Ivan")
+                .lastname("Ivanov")
+                .build();
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
+            try (Session session1 = sessionFactory.openSession()) {
+                session1.beginTransaction();
 
-        try (SessionFactory sessionFactory = configuration.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+                // Persistent state about session1 and Transient state about session2
+                session1.saveOrUpdate(user);
 
-            User user = User.builder()
-                    .username("76myxomor76@gmail.com@gmail.com")
-                    .firstname("Ilya")
-                    .lastname("Tikhomirov")
-                    .info("""
-                            {
-                                "name": "Ivan",
-                                "id": 25
-                            }
-                            """)
-                    .birthdate(new Birthday(LocalDate.of(2003, 6, 5)))
-                    .role(Role.ADMIN)
-                    .build();
-            session.persist(user);
-//            session.update(user);
-//            session.saveOrUpdate(user);
-//            session.delete(user);
-//            session.get(User.class, "myxomor@gmail.com@gmail.com");
-            session.getTransaction().commit();
+                session1.beginTransaction().commit();
+            }
+            try (Session session2 = sessionFactory.openSession()) {
+                session2.beginTransaction();
+
+                user.setFirstname("Sveta");
+
+//                session2.delete(user);
+//                session2.refresh(user);
+                session2.merge(user);
+
+                session2.beginTransaction().commit();
+            }
         }
     }
 }
