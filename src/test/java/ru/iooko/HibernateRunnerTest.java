@@ -1,10 +1,10 @@
 package ru.iooko;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
 import ru.iooko.entity.User;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,11 +20,6 @@ class HibernateRunnerTest {
     @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
         User user = User.builder()
-                .username("76myxomor76@gmail.com@gmail.com")
-                .firstname("Austin")
-                .lastname("Pershing")
-                .birthDate(LocalDate.of(2003, 6, 5))
-                .age(20)
                 .build();
 
         String sql = """

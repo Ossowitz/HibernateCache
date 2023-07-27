@@ -1,15 +1,13 @@
 package ru.iooko.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import ru.iooko.converter.BirthdayConverter;
 
-import java.time.LocalDate;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -26,8 +24,13 @@ public class User {
 
     private String lastname;
 
+    @Convert(converter = BirthdayConverter.class)
     @Column(name = "birth_date")
-    private LocalDate birthDate;
+    private Birthday birthdate;
 
-    private Integer age;
+    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
+    private String info;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
