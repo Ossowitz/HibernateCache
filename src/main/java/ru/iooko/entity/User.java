@@ -20,12 +20,9 @@ public class User {
     @Id
     private String username;
 
-    private String firstname;
-
-    private String lastname;
-
-    @Column(name = "birth_date")
-    private Birthday birthdate;
+    @Embedded
+    @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
+    private PersonalInfo personalInfo;
 
     @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType")
     private String info;

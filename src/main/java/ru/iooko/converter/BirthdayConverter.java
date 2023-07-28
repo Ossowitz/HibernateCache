@@ -3,6 +3,7 @@ package ru.iooko.converter;
 import ru.iooko.entity.Birthday;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.sql.Date;
 import java.util.Optional;
 
